@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - IMS PRO</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="stylesheet" href="../css/style.css">
+</head>
+<body class="bg-gray-50 flex">
+    <script src="../js/nav.js"></script>
+    <script src="../js/dashboard.js"></script> <div class="flex-1 ml-64 min-h-screen flex flex-col">
+        <div class="bg-[#0f172a] text-white p-6 shadow-md">
+            <h2 class="text-2xl font-extrabold tracking-tight">Executive Overview</h2>
+            <p class="text-slate-400 text-xs mt-1">Real-time financial and stock performance.</p>
+        </div>
+
+        <div class="p-8 space-y-8">
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                <div class="bg-white p-6 rounded-xl shadow-sm border border-slate-200 border-l-4 border-blue-500">
+                    <h3 class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Inventory Assets</h3>
+                    <p class="text-xl font-bold text-slate-800 mt-1" id="totalValue">Ksh 0.00</p>
+                </div>
+                <div class="bg-white p-6 rounded-xl shadow-sm border border-slate-200 border-l-4 border-purple-600">
+                    <h3 class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Total Revenue</h3>
+                    <p class="text-xl font-bold text-slate-800 mt-1" id="totalRevenue">Ksh 0.00</p>
+                </div>
+                <div class="bg-white p-6 rounded-xl shadow-sm border border-slate-200 border-l-4 border-red-500">
+                    <h3 class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Low Stock</h3>
+                    <p class="text-2xl font-bold text-red-600 mt-1" id="lowStock">0</p>
+                </div>
+                <div class="bg-white p-6 rounded-xl shadow-sm border border-slate-200 border-l-4 border-slate-400">
+                    <h3 class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Sales Count</h3>
+                    <p class="text-2xl font-bold text-slate-800 mt-1" id="totalOrders">0</p>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                <div class="lg:col-span-2 bg-white p-8 rounded-xl shadow-sm border border-slate-200">
+                    <h3 class="font-bold text-slate-700 text-sm mb-6 uppercase tracking-wide">Monthly Revenue Trend</h3>
+                    <div class="h-[350px] w-full"><canvas id="salesChart"></canvas></div>
+                </div>
+
+                <div class="space-y-6">
+                    <div class="bg-white p-8 rounded-xl shadow-sm border border-slate-200">
+                        <h3 class="font-bold text-slate-700 text-sm mb-6 border-b pb-3 uppercase tracking-widest">Management Console</h3>
+                        <div class="flex flex-col gap-3">
+                            <button onclick="location.href='users.html'" class="btn-dashboard">Staff Account Security</button>
+                            <button onclick="downloadReport()" class="btn-dashboard">Export Intelligence Report</button>
+                        </div>
+                    </div>
+
+                    <div id="insightCard" class="bg-[#1e293b] p-8 rounded-xl shadow-lg text-white border-l-4 border-blue-500">
+                        <h4 class="font-bold text-sm mb-2 uppercase tracking-wide">System Intelligence</h4>
+                        <p id="insightText" class="text-xs text-gray-400 leading-relaxed">System is analyzing current inventory levels. No critical actions required.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

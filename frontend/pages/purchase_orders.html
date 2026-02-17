@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Restocking - IMS</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="../css/style.css">
+</head>
+<body class="bg-gray-100">
+
+    <script src="../js/nav.js"></script>
+
+    <div class="ml-64">
+        <div class="bg-master text-white p-8 shadow-md flex justify-between items-center">
+            <div>
+                <h2 class="text-3xl font-extrabold tracking-tight">Restock Requests</h2>
+                <p class="text-slate-400 text-sm mt-1">Manage inbound procurement</p>
+            </div>
+            <button onclick="toggleModal()" class="btn-action">
+                <img src="../assets/icons/plus.svg" class="w-5 h-5 mr-2 filter invert">
+                Create Purchase Order
+            </button>
+        </div>
+
+        <div class="p-8">
+            <div class="bg-white rounded-lg shadow-lg overflow-hidden border border-slate-200">
+                <table class="w-full text-left border-collapse">
+                    <thead class="bg-slate-50 text-slate-700 uppercase text-xs font-bold tracking-wider">
+                        <tr>
+                            <th class="p-4 border-b">PO #</th>
+                            <th class="p-4 border-b">Supplier</th>
+                            <th class="p-4 border-b">Part</th>
+                            <th class="p-4 border-b">Req. Date</th>
+                            <th class="p-4 border-b">Rec. Date</th>
+                            <th class="p-4 border-b">Qty Req / Rec</th>
+                            <th class="p-4 border-b">Status</th>
+                            <th class="p-4 border-b">Action</th>
+                        </tr>
+                    </thead>
+                    <tbody id="poTableBody" class="text-gray-600 text-sm font-medium"></tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <div id="poModal" class="fixed inset-0 bg-black bg-opacity-60 hidden flex justify-center items-center z-50 backdrop-blur-sm">
+        <div class="bg-white p-8 rounded-xl w-96 shadow-2xl">
+            <h2 class="text-2xl font-bold mb-6 text-slate-800">Order Stock</h2>
+            <form id="poForm">
+                <label class="block text-xs font-bold text-gray-500 uppercase mb-1">Select Supplier</label>
+                <select id="supplierSelect" class="w-full border-2 border-gray-200 p-3 rounded-lg mb-4 bg-white"><option>Loading...</option></select>
+
+                <label class="block text-xs font-bold text-gray-500 uppercase mb-1">Select Part</label>
+                <select id="partSelect" class="w-full border-2 border-gray-200 p-3 rounded-lg mb-4 bg-white"><option>Loading...</option></select>
+
+                <label class="block text-xs font-bold text-gray-500 uppercase mb-1">Quantity</label>
+                <input type="number" id="quantity" class="w-full border-2 border-gray-200 p-3 rounded-lg mb-6" required>
+                
+                <div class="flex justify-end gap-3">
+                    <button type="button" onclick="toggleModal()" class="px-5 py-2 text-gray-600 font-bold hover:bg-gray-100 rounded-lg">Cancel</button>
+                    <button type="submit" class="btn-action">Submit Order</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div id="receiveModal" class="fixed inset-0 bg-black bg-opacity-60 hidden flex justify-center items-center z-50 backdrop-blur-sm">
+        <div class="bg-white p-8 rounded-xl w-96 shadow-2xl">
+            <h2 class="text-2xl font-bold mb-2 text-slate-800">Receive Delivery</h2>
+            <p class="text-sm text-gray-500 mb-6">Enter the actual quantity arrived.</p>
+            
+            <input type="hidden" id="receivePoId">
+            
+            <label class="block text-xs font-bold text-gray-500 uppercase mb-1">Expected Quantity</label>
+            <input type="text" id="expectedQty" class="w-full bg-gray-100 border-2 border-gray-200 p-3 rounded-lg mb-4 text-gray-500" readonly>
+
+            <label class="block text-xs font-bold text-green-600 uppercase mb-1">Actual Quantity Received</label>
+            <input type="number" id="actualQty" class="w-full border-2 border-green-200 p-3 rounded-lg mb-6 focus:border-green-500 outline-none" required>
+            
+            <div class="flex justify-end gap-3">
+                <button type="button" onclick="toggleReceiveModal()" class="px-5 py-2 text-gray-600 font-bold hover:bg-gray-100 rounded-lg">Cancel</button>
+                <button onclick="confirmReceive()" class="btn-action bg-green-600 hover:bg-green-700">Confirm Stock</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="../js/purchase_orders.js"></script>
+</body>
+</html>

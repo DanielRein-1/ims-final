@@ -1,0 +1,66 @@
+/* LOGIN PAGE STYLES (THE OUTSIDE WORLD)
+   Target: login.html ONLY */
+
+:root {
+    /* COLOR CONTROL CENTER */
+    
+    /* 1. Background Settings */
+    --page-bg: #f3f4f6;       /* Light Grey Background */
+    --dot-color: #e5e7eb;     /* The little dots pattern */
+    
+    /* 2. Login Card (The White Box) */
+    --card-bg: #ffffff;
+    --card-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25); /* Deep Shadow */
+    
+    /* 3. Primary Buttons (Sign In) */
+    --btn-bg: #2563eb;        /* Main Blue */
+    --btn-hover: #1d4ed8;     /* Darker Blue on Hover */
+    --btn-text: #ffffff;      /* White Text */
+    
+    /* 4. Brand Icon Background */
+    --icon-circle-bg: #1f59d6; /* Matches button blue */
+}
+
+/* PAGE BACKGROUND (The Dot Pattern) */
+body {
+    background-color: var(--page-bg);
+    background-image: radial-gradient(var(--dot-color) 1px, transparent 1px);
+    background-size: 20px 20px;
+}
+
+/* THE LOGIN CARD (Center Box) */
+.login-card {
+    background-color: var(--card-bg);
+    box-shadow: var(--card-shadow);
+}
+
+/* ICON STYLING */
+.icon-circle {
+    background-color: var(--icon-circle-bg) !important;
+}
+
+/* BUTTONS */
+.btn-login {
+    background-color: var(--btn-bg) !important;
+    color: var(--btn-text) !important;
+    transition: all 0.2s ease-in-out;
+}
+
+.btn-login:hover {
+    background-color: var(--btn-hover) !important;
+    transform: scale(0.98); 
+}
+
+/* INPUT FIELD STYLING (Fixed: No more double lines) */
+.input-field:focus {
+    /* 1. Turn the border blue */
+    border-color: var(--btn-bg) !important;
+    
+    /* 2. Remove the ugly double line */
+    outline: none !important; 
+    
+    /* 3. Add a soft matching glow instead */
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.2) !important; 
+    
+    background-color: #fff !important;
+}

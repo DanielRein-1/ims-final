@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Inventory - IMS</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="../css/style.css">
+</head>
+<body class="bg-gray-100">
+    <div class="ml-64">
+        <div class="bg-master text-white p-8 shadow-md flex justify-between items-center">
+            <div>
+                <h2 class="text-3xl font-extrabold tracking-tight">Inventory Control</h2>
+                <p class="text-slate-400 text-sm mt-1">Manage stock levels and pricing</p>
+            </div>
+            <button id="addPartBtn" onclick="toggleModal()" class="bg-blue-600 hover:bg-blue-700 px-6 py-3 rounded-xl font-bold transition flex items-center">
+                <span class="text-2xl mr-2 leading-none">+</span> Add New Part
+            </button>
+        </div>
+
+        <div class="p-8">
+            <div class="mb-6">
+                <input type="text" id="inventorySearch" placeholder="Search by name or SKU..." 
+                class="w-full p-4 rounded-xl border border-slate-200 shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all bg-white">
+            </div>
+
+            <div class="bg-white rounded-lg shadow-lg overflow-hidden border border-slate-200">
+                <table class="w-full text-left border-collapse">
+                    <thead class="bg-slate-50 text-slate-700 uppercase text-xs font-bold tracking-wider">
+                        <tr>
+                            <th class="p-4 border-b">ID</th>
+                            <th class="p-4 border-b">Name</th>
+                            <th class="p-4 border-b">SKU</th>
+                            <th class="p-4 border-b">Price</th>
+                            <th class="p-4 border-b">Stock</th>
+                            <th class="p-4 border-b">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="inventoryTableBody" class="text-gray-600 text-sm font-medium"></tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <div id="partModal" class="fixed inset-0 bg-black bg-opacity-60 hidden flex justify-center items-center z-50 backdrop-blur-sm">
+        <div class="bg-white p-8 rounded-xl w-96 shadow-2xl">
+            <h2 class="text-2xl font-bold mb-6 text-slate-800">Add New Item</h2>
+            <form id="partForm">
+                <label class="block text-xs font-bold text-gray-500 uppercase mb-1">Part Name</label>
+                <input type="text" id="name" class="w-full border-2 border-gray-200 p-3 rounded-lg mb-4 focus:border-blue-500 outline-none" required>
+                <label class="block text-xs font-bold text-gray-500 uppercase mb-1">SKU</label>
+                <input type="text" id="sku" class="w-full border-2 border-gray-200 p-3 rounded-lg mb-4 focus:border-blue-500 outline-none" required>
+                <label class="block text-xs font-bold text-gray-500 uppercase mb-1">Price (Ksh)</label>
+                <input type="number" id="price" class="w-full border-2 border-gray-200 p-3 rounded-lg mb-4 focus:border-blue-500 outline-none" required>
+                <label class="block text-xs font-bold text-gray-500 uppercase mb-1">Initial Quantity</label>
+                <input type="number" id="quantity" class="w-full border-2 border-gray-200 p-3 rounded-lg mb-6 focus:border-blue-500 outline-none" required>
+                <div class="flex justify-end gap-3">
+                    <button type="button" onclick="toggleModal()" class="px-5 py-2 text-gray-600 font-bold hover:bg-gray-100 rounded-lg">Cancel</button>
+                    <button type="submit" class="bg-blue-600 text-white px-6 py-2 rounded-lg font-bold">Save Item</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script src="../js/nav.js"></script>
+    <script src="../js/inventory.js"></script>
+    <div id="editModal" class="fixed inset-0 bg-black/60 hidden flex justify-center items-center z-50"> 
+        <div class="bg-white p-8 rounded-xl w-96 shadow-2xl"> 
+            <h2 class="text-xl font-bold mb-4">Edit Part Details</h2> 
+            <form id="editPartForm"> 
+                <input type="hidden" id="edit_id"> 
+                <input type="text" id="edit_name" placeholder="Part Name" class="w-full border p-3 rounded mb-4" required> 
+                <input type="text" id="edit_sku" placeholder="SKU" class="w-full border p-3 rounded mb-4" required> 
+                <input type="number" id="edit_price" placeholder="Price (Ksh)" class="w-full border p-3 rounded mb-4" required> 
+                <input type="number" id="edit_quantity" placeholder="Quantity" class="w-full border p-3 rounded mb-6" required> 
+                <div class="flex justify-end gap-3"> 
+                    <button type="button" onclick="closeEditModal()" class="px-4 py-2 font-bold">CANCEL</button> 
+                    <button type="submit" class="bg-blue-600 text-white px-6 py-2 rounded-lg font-bold">UPDATE</button> 
+                </div> 
+            </form> 
+        </div> 
+    </div>
+</body>
+</html>

@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Manage Users - IMS PRO</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="../css/style.css">
+</head>
+<body class="bg-gray-100">
+    <div class="ml-64">
+        <div class="bg-master text-white p-8 shadow-md flex justify-between items-center">
+            <div>
+                <h2 class="text-3xl font-extrabold tracking-tight">Staff Accounts</h2>
+                <p class="text-slate-400 text-sm mt-1">System Access Control</p>
+            </div>
+            <button onclick="toggleModal()" class="bg-blue-600 hover:bg-blue-700 px-6 py-2 rounded-lg font-bold transition">
+                + ADD NEW USER
+            </button>
+        </div>
+
+        <div class="p-8">
+            <div class="bg-white rounded-lg shadow-lg overflow-hidden border border-slate-200">
+                <table class="w-full text-left">
+                    <thead class="bg-slate-50 text-slate-700 uppercase text-xs font-bold">
+                        <tr>
+                            <th class="p-4 border-b">ID</th>
+                            <th class="p-4 border-b">Username</th>
+                            <th class="p-4 border-b">Role</th>
+                            <th class="p-4 border-b">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="usersTableBody"></tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <div id="userModal" class="fixed inset-0 bg-black/60 hidden flex justify-center items-center z-50">
+        <div class="bg-white p-8 rounded-xl w-96">
+            <h2 class="text-xl font-bold mb-4">Create Staff Access</h2>
+            <form id="userForm">
+                <input type="text" id="username" placeholder="Username" class="w-full border p-3 rounded mb-4" required>
+                <select id="role" class="w-full border p-3 rounded mb-4">
+                    <option value="STAFF">STAFF</option>
+                    <option value="ADMIN">ADMIN</option>
+                </select>
+                <input type="password" id="password" placeholder="Password" class="w-full border p-3 rounded mb-6" required>
+                <div class="flex justify-end gap-3">
+                    <button type="button" onclick="toggleModal()" class="px-4 py-2">CANCEL</button>
+                    <button type="submit" class="bg-slate-900 text-white px-6 py-2 rounded-lg font-bold">CREATE</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script src="../js/nav.js"></script>
+    <script src="../js/users.js"></script>
+</body>
+</html>

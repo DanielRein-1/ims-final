@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sales Orders - IMS</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="../css/style.css">
+</head>
+<body class="bg-gray-100">
+
+    <script src="../js/nav.js"></script>
+
+    <div class="ml-64">
+        <div class="bg-master text-white p-8 shadow-md flex justify-between items-center">
+            <div>
+                <h2 class="text-3xl font-extrabold tracking-tight">Sales Transactions</h2>
+                <p class="text-slate-400 text-sm mt-1">Outbound stock history</p>
+            </div>
+            <button onclick="toggleModal()" class="btn-action">
+                <img src="../assets/icons/shopping-cart.svg" class="w-5 h-5 mr-2 filter invert">
+                New Sale
+            </button>
+        </div>
+
+        <div class="p-8">
+            <div class="bg-white rounded-lg shadow-lg overflow-hidden border border-slate-200">
+                <table class="w-full text-left border-collapse">
+                    <thead class="bg-slate-50 text-slate-700 uppercase text-xs font-bold tracking-wider">
+                        <tr>
+                            <th class="p-4 border-b">ORDER</th>
+                            <th class="p-4 border-b">Part</th>
+                            <th class="p-4 border-b">Qty</th>
+                            <th class="p-4 border-b">Total</th>
+                            <th class="p-4 border-b">Date</th>
+                            <th class="p-4 border-b">Time</th>
+                        </tr>
+                    </thead>
+                    <tbody id="ordersTableBody" class="text-gray-600 text-sm font-medium"></tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <div id="orderModal" class="fixed inset-0 bg-black bg-opacity-60 hidden flex justify-center items-center z-50 backdrop-blur-sm">
+        <div class="bg-white p-8 rounded-xl w-96 shadow-2xl">
+            <h2 class="text-2xl font-bold mb-6 text-slate-800">Record Sale</h2>
+            <form id="orderForm">
+                <label class="block text-xs font-bold text-gray-500 uppercase mb-1">Part Name</label>
+                <select id="part_id" class="w-full border-2 border-gray-200 p-3 rounded-lg mb-4 bg-white" required>
+                    <option>Loading...</option>
+                </select>
+                
+                <label class="block text-xs font-bold text-gray-500 uppercase mb-1">Quantity</label>
+                <input type="number" id="quantity" class="w-full border-2 border-gray-200 p-3 rounded-lg mb-6" required>
+                
+                <div class="flex justify-end gap-3">
+                    <button type="button" onclick="toggleModal()" class="px-5 py-2 text-gray-600 font-bold hover:bg-gray-100 rounded-lg">Cancel</button>
+                    <button type="submit" class="btn-action">Complete Sale</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script src="../js/orders.js"></script>
+</body>
+</html>

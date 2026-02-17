@@ -1,0 +1,99 @@
+/* MAIN APP STYLES (THE INSIDE WORLD)
+   Target: dashboard.html, inventory.html, etc. */
+
+:root {
+    /* MASTER THEME PALETTE */
+    
+    /* 1. Sidebar & Top Bar (The Frame) */
+    --bg-primary: #0f172a;    /* Dark Blue/Slate */
+    
+    /* 2. Action Buttons (Add Item, Save) */
+    --btn-primary: #2563eb;   /* Bright Blue */
+    
+    /* 3. DASHBOARD SHORTCUTS (Staff, Audit, Reports) */
+    /* CHANGE THIS HEX CODE to update all admin buttons at once */
+    --admin-btn-bg: #1e293b;       /* Dark Slate */
+    --admin-btn-hover: #334155;    /* Lighter Slate on Hover */
+    --admin-btn-text: #ffffff;     /* White Text */
+
+    /* 4. General Text */
+    --text-white: #ffffff;
+}
+
+/* SIDEBAR & HEADER */
+.bg-master {
+    background-color: var(--bg-primary) !important;
+}
+
+/* "ADD NEW" ACTION BUTTONS */
+.btn-action {
+    background-color: var(--btn-primary) !important;
+    color: var(--text-white) !important;
+    padding: 10px 20px;
+    border-radius: 8px;
+    font-weight: bold;
+    display: inline-flex;
+    align-items: center;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+    transition: transform 0.1s ease-in-out;
+}
+
+.btn-action:hover {
+    filter: brightness(110%); /* Makes it slightly lighter */
+    transform: scale(1.02);   /* Slight pop effect */
+}
+
+/* TABLE ICON BUTTONS (Edit/Delete) */
+.btn-icon {
+    padding: 8px;
+    border-radius: 6px;
+    transition: background-color 0.2s;
+}
+.btn-icon:hover {
+    background-color: #e2e8f0; /* Light Gray Hover */
+}
+
+/* DASHBOARD ADMIN SHORTCUTS 
+   (Used for Manage Staff, Audit Logs, Download Report) */
+.btn-dashboard {
+    background-color: var(--admin-btn-bg) !important; /* Uses Variable #3 above */
+    color: var(--admin-btn-text);
+    padding: 12px 16px;
+    border-radius: 8px;
+    font-size: 0.875rem; 
+    display: flex;
+    align-items: center;
+    width: 100%;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+    transition: all 0.2s ease-in-out;
+    margin-bottom: 0.75rem;
+    cursor: pointer;
+    border: none;
+}
+
+.btn-dashboard:hover {
+    background-color: var(--admin-btn-hover) !important;
+    transform: scale(0.98); /* Slight press effect */
+}
+
+.btn-dashboard img, .btn-dashboard span.icon {
+    margin-right: 12px; /* Spacing between icon and text */
+}
+/* Professional Role-Based Display: Hide until JS confirms ADMIN */
+#addPartBtn, 
+#addSupplierBtn, 
+.admin-actions {
+    display: none !important;
+}
+/* FORCE HIDE: No more blinking */
+#addPartBtn, 
+#addSupplierBtn, 
+.admin-actions {
+    display: none !important;
+}
+
+/* Fix the table spacing when columns are removed */
+table {
+    table-layout: auto !important;
+    width: 100% !important;
+}

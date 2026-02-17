@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>System Logs - IMS</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="../css/style.css">
+</head>
+<body class="bg-gray-100">
+
+    <script src="../js/nav.js"></script>
+
+    <div class="ml-64">
+        <div class="bg-master text-white p-8 shadow-md">
+            <h2 class="text-3xl font-extrabold tracking-tight">System Activity Logs</h2>
+            <p class="text-slate-400 text-sm mt-1">Audit trail of all transactions and alerts</p>
+        </div>
+
+        <div class="p-8">
+            <div class="bg-white rounded-lg shadow-lg overflow-hidden border border-slate-200">
+                <table class="w-full text-left border-collapse">
+                    <thead class="bg-slate-50 text-slate-700 uppercase text-xs font-bold tracking-wider">
+                        <tr>
+                            <th class="p-4 border-b">Timestamp</th>
+                            <th class="p-4 border-b">Type</th>
+                            <th class="p-4 border-b">Description</th>
+                            <th class="p-4 border-b">Status</th>
+                        </tr>
+                    </thead>
+                    <tbody id="logsTableBody" class="text-gray-600 text-sm font-medium">
+                        <tr><td colspan="4" class="p-4 text-center">Loading activity...</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <script src="../js/logs.js"></script>
+</body>
+</html>
