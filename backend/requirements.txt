@@ -1,7 +1,7 @@
-Flask
-gunicorn
+fastapi
+uvicorn
 psycopg2-binary
-SQLAlchemy
+sqlalchemy
 requests
-Pillow
 python-dotenv
+pydantic
