@@ -30,7 +30,7 @@
                         <tr>
                             <th class="p-4 border-b">PO #</th>
                             <th class="p-4 border-b">Supplier</th>
-                            <th class="p-4 border-b">Part</th>
+                            <th class="p-4 border-b">Make</th> <th class="p-4 border-b">Part</th>
                             <th class="p-4 border-b">Req. Date</th>
                             <th class="p-4 border-b">Rec. Date</th>
                             <th class="p-4 border-b">Qty Req / Rec</th>
@@ -47,14 +47,17 @@
     <div id="poModal" class="fixed inset-0 bg-black bg-opacity-60 hidden flex justify-center items-center z-50 backdrop-blur-sm">
         <div class="bg-white p-8 rounded-xl w-96 shadow-2xl">
             <h2 class="text-2xl font-bold mb-6 text-slate-800">Order Stock</h2>
-            <form id="poForm">
-                <label class="block text-xs font-bold text-gray-500 uppercase mb-1">Select Supplier</label>
+          <form id="poForm">
+                <label class="block text-xs font-bold text-gray-500 uppercase mb-1">1. Select Supplier</label>
                 <select id="supplierSelect" class="w-full border-2 border-gray-200 p-3 rounded-lg mb-4 bg-white"><option>Loading...</option></select>
 
-                <label class="block text-xs font-bold text-gray-500 uppercase mb-1">Select Part</label>
-                <select id="partSelect" class="w-full border-2 border-gray-200 p-3 rounded-lg mb-4 bg-white"><option>Loading...</option></select>
+                <label class="block text-xs font-bold text-gray-500 uppercase mb-1">2. Select Make</label>
+                <select id="makeSelect" class="w-full border-2 border-gray-200 p-3 rounded-lg mb-4 bg-white"><option>Loading...</option></select>
 
-                <label class="block text-xs font-bold text-gray-500 uppercase mb-1">Quantity</label>
+                <label class="block text-xs font-bold text-gray-500 uppercase mb-1">3. Select Part</label>
+                <select id="partSelect" class="w-full border-2 border-gray-200 p-3 rounded-lg mb-4 bg-white"><option>Select a make first...</option></select>
+
+                <label class="block text-xs font-bold text-gray-500 uppercase mb-1">4. Quantity to Order</label>
                 <input type="number" id="quantity" class="w-full border-2 border-gray-200 p-3 rounded-lg mb-6" required>
                 
                 <div class="flex justify-end gap-3">

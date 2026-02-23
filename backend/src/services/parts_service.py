@@ -22,10 +22,8 @@ class PartsService:
 
     @staticmethod
     def get_all_parts(db: Session):
-        # Sort by ID so the table doesn't jump around
         return db.query(Part).order_by(Part.id).all()
 
-    # --- NEW UPDATE METHOD ---
     @staticmethod
     def update_part(db: Session, part_id: int, part_data: PartCreate):
         part = db.query(Part).filter(Part.id == part_id).first()
@@ -36,6 +34,9 @@ class PartsService:
         part.sku = part_data.sku
         part.price = part_data.price
         part.quantity = part_data.quantity
+        # --- ESSENTIAL ADDITION: Ensure category is updated ---
+        part.category = part_data.category 
+        # ------------------------------------------------------
         
         db.commit()
         db.refresh(part)

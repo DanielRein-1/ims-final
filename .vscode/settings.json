@@ -1,3 +1,16 @@
 {
-    "livePreview.defaultPreviewPath": "/frontend/pages/login.html"
+    "livePreview.defaultPreviewPath": "/frontend/pages/login.html",
+    "sqltools.connections": [
+        {
+            "ssh": "Disabled",
+            "previewLimit": 50,
+            "server": "localhost",
+            "port": 5432,
+            "askForPassword": true,
+            "driver": "PostgreSQL",
+            "name": "IMS Local",
+            "database": "spare_parts_db",
+            "username": "spare_user"
+        }
+    ]
 }

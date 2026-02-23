@@ -37,9 +37,9 @@ def create_master_admin():
             """), {"pwd": hashed_pwd})
             
         session.commit()
-        print("✅ SUCCESS: Master Admin Synced: admin / admin123")
+        print(" SUCCESS: Master Admin Synced: admin / admin123")
     except Exception as e:
-        print(f"❌ Error: {e}")
+        print(f" Error: {e}")
         session.rollback()
     finally:
         session.close()

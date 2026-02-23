@@ -1,8 +1,6 @@
-// overwrite frontend/js/inventory.js
-const API_URL = "http://127.0.0.1:8000/api/parts"; // No trailing slash here, we add it dynamically if needed
+const API_URL = "http://127.0.0.1:8000/api/parts"; 
 
 document.addEventListener("DOMContentLoaded", () => {
-    // 1. Check Role & Hide Admin Buttons
     const role = localStorage.getItem("role");
     if (role !== "ADMIN") {
         const addBtn = document.getElementById("addPartBtn");
@@ -11,7 +9,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
     loadInventory();
     
-    // Search Feature
     document.getElementById("inventorySearch")?.addEventListener("input", (e) => {
         const term = e.target.value.toLowerCase();
         document.querySelectorAll("#inventoryTableBody tr").forEach(row => {
@@ -28,7 +25,7 @@ async function loadInventory() {
     if (!token) window.location.href = "login.html";
 
     try {
-        const res = await fetch(API_URL + "/", { // Add slash for GET list
+        const res = await fetch(API_URL + "/", { 
             headers: { "Authorization": "Bearer " + token }
         });
 
@@ -38,10 +35,8 @@ async function loadInventory() {
             const role = localStorage.getItem("role");
             
             tbody.innerHTML = parts.map(p => {
-                // Abstraction Logic: Only Admin gets buttons
                 let actions = '<span class="text-xs text-gray-400">View Only</span>';
                 if (role === "ADMIN") {
-                    // Note: encoding JSON for the onclick to avoid syntax errors with quotes
                     const partSafe = JSON.stringify(p).replace(/"/g, '&quot;');
                     actions = `
                         <div class="flex gap-2">
@@ -58,6 +53,7 @@ async function loadInventory() {
                 return `
                 <tr class="border-b hover:bg-slate-50 transition group">
                     <td class="p-4 text-xs font-mono text-slate-400">#${p.id}</td>
+                    <td class="p-4 font-bold text-blue-600 uppercase text-xs tracking-wider">${p.category || 'Universal'}</td>
                     <td class="p-4 font-bold text-slate-700">${p.name}</td>
                     <td class="p-4 text-xs font-mono">${p.sku}</td>
                     <td class="p-4 font-bold text-slate-700">KES ${p.price.toLocaleString()}</td>
@@ -78,6 +74,7 @@ async function createPart(e) {
     const token = localStorage.getItem("token");
     const data = {
         name: document.getElementById("name").value,
+        category: document.getElementById("category").value, // NEW CATEGORY BINDING
         sku: document.getElementById("sku").value,
         price: parseFloat(document.getElementById("price").value),
         quantity: parseInt(document.getElementById("quantity").value)
@@ -97,12 +94,13 @@ async function updatePart(e) {
     const id = document.getElementById("edit_id").value;
     const data = {
         name: document.getElementById("edit_name").value,
+        category: document.getElementById("edit_category").value, // NEW CATEGORY BINDING
         sku: document.getElementById("edit_sku").value,
         price: parseFloat(document.getElementById("edit_price").value),
         quantity: parseInt(document.getElementById("edit_quantity").value)
     };
 
-    const res = await fetch(`${API_URL}/${id}`, { // No trailing slash typically for ID, or backend handles it
+    const res = await fetch(`${API_URL}/${id}`, { 
         method: "PUT",
         headers: { "Content-Type": "application/json", "Authorization": "Bearer " + token },
         body: JSON.stringify(data)
@@ -124,10 +122,11 @@ async function deletePart(id) {
 
 function toggleModal() { document.getElementById("partModal").classList.toggle("hidden"); }
 function closeEditModal() { document.getElementById("editModal").classList.add("hidden"); }
-// Helper to open edit modal (called from HTML)
+
 window.openEditModal = function(part) {
     document.getElementById("edit_id").value = part.id;
     document.getElementById("edit_name").value = part.name;
+    document.getElementById("edit_category").value = part.category || "Universal"; // NEW CATEGORY BINDING
     document.getElementById("edit_sku").value = part.sku;
     document.getElementById("edit_price").value = part.price;
     document.getElementById("edit_quantity").value = part.quantity;

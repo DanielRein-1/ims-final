@@ -1,3 +1,4 @@
+# overwrite backend/src/schemas/order_schema.py
 from pydantic import BaseModel
 from datetime import datetime
 from typing import Optional
@@ -5,6 +6,9 @@ from typing import Optional
 # 1. Mini Schema for the Part Name
 class PartRef(BaseModel):
     name: str
+    # --- ESSENTIAL ADDITION: Expose category to frontend ---
+    category: str 
+    # -------------------------------------------------------
     class Config:
         from_attributes = True
 
@@ -19,7 +23,6 @@ class OrderResponse(BaseModel):
     total_price: int
     created_at: datetime
     
-    # 2. Embed the Part Name here
     part: Optional[PartRef] = None 
 
     class Config:

@@ -26,19 +26,20 @@ def reset():
     db.add(sup1)
     db.add(sup2)
     
-    print("5. Seeding Inventory Parts...")
+    print("5. Seeding Inventory Parts (WITH CAR MAKES)...")
     parts = [
-        Part(name="Brake Pad (Front)", sku="BP-001", price=3500, quantity=5),   # Low stock example
-        Part(name="Oil Filter", sku="OF-002", price=800, quantity=50),
-        Part(name="Headlight Assembly", sku="HL-003", price=12000, quantity=2), # Very low stock
-        Part(name="Spark Plug (Set of 4)", sku="SP-004", price=2000, quantity=20),
-        Part(name="Shock Absorber (Rear)", sku="SA-005", price=8500, quantity=10)
+        # ESSENTIAL ADDITION: Added 'category' to all seed data
+        Part(name="Brake Pad (Front)", sku="BP-001", category="Toyota", price=3500, quantity=5),
+        Part(name="Oil Filter", sku="OF-002", category="Nissan", price=800, quantity=50),
+        Part(name="Headlight Assembly", sku="HL-003", category="Mercedes", price=12000, quantity=2),
+        Part(name="Spark Plug (Set of 4)", sku="SP-004", category="Audi", price=2000, quantity=20),
+        Part(name="Shock Absorber (Rear)", sku="SA-005", category="Volvo", price=8500, quantity=10)
     ]
     db.add_all(parts)
     
     db.commit()
     db.close()
-    print("SUCCESS: Database reset and seeded with initial data.")
+    print("SUCCESS: Database reset and seeded with initial categorical data.")
 
 if __name__ == "__main__":
     reset()
