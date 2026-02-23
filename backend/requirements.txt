@@ -11,6 +11,6 @@ pydantic
 pydantic-settings
 
 # Authentication and Security
-PyJWT==2.7.0
+python-jose[cryptography]
 passlib[bcrypt]
 python-multipart
