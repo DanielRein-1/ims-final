@@ -2,9 +2,13 @@ const API_URL = "http://127.0.0.1:8000/api/parts";
 
 document.addEventListener("DOMContentLoaded", () => {
     const role = localStorage.getItem("role");
-    if (role !== "ADMIN") {
-        const addBtn = document.getElementById("addPartBtn");
-        if (addBtn) addBtn.style.display = "none";
+    const addBtn = document.getElementById("addPartBtn");
+    
+    // STRICT SECURITY OVERRIDE: Show for Admin, Hide for Staff
+    if (role === "ADMIN") {
+        if (addBtn) addBtn.style.setProperty("display", "flex", "important");
+    } else {
+        if (addBtn) addBtn.style.setProperty("display", "none", "important");
     }
 
     loadInventory();
@@ -74,7 +78,7 @@ async function createPart(e) {
     const token = localStorage.getItem("token");
     const data = {
         name: document.getElementById("name").value,
-        category: document.getElementById("category").value, // NEW CATEGORY BINDING
+        category: document.getElementById("category").value, 
         sku: document.getElementById("sku").value,
         price: parseFloat(document.getElementById("price").value),
         quantity: parseInt(document.getElementById("quantity").value)
@@ -85,7 +89,25 @@ async function createPart(e) {
         headers: { "Content-Type": "application/json", "Authorization": "Bearer " + token },
         body: JSON.stringify(data)
     });
-    if(res.ok) { toggleModal(); loadInventory(); }
+    if(res.ok) { 
+        // --- NEW: LOG IT FOR THE DEMO ---
+        const currentLogs = JSON.parse(localStorage.getItem("liveLogs") || "[]");
+        currentLogs.unshift({
+            time: new Date().toLocaleString('en-US', { month: 'short', day: 'numeric', year: 'numeric', hour: '2-digit', minute: '2-digit', second: '2-digit' }), 
+            type: "INVENTORY", 
+            desc: `Admin added new SKU: ${data.name} (${data.quantity} units)`, 
+            status: "SUCCESS", 
+            color: "text-green-600"
+        });
+        localStorage.setItem("liveLogs", JSON.stringify(currentLogs));
+        // --------------------------------
+
+        toggleModal(); 
+        loadInventory(); 
+        document.getElementById("partForm").reset(); 
+    } else {
+        alert("Failed to create part. Please check your inputs.");
+    }
 }
 
 async function updatePart(e) {
@@ -94,7 +116,7 @@ async function updatePart(e) {
     const id = document.getElementById("edit_id").value;
     const data = {
         name: document.getElementById("edit_name").value,
-        category: document.getElementById("edit_category").value, // NEW CATEGORY BINDING
+        category: document.getElementById("edit_category").value,
         sku: document.getElementById("edit_sku").value,
         price: parseFloat(document.getElementById("edit_price").value),
         quantity: parseInt(document.getElementById("edit_quantity").value)
@@ -106,18 +128,49 @@ async function updatePart(e) {
         body: JSON.stringify(data)
     });
 
-    if (res.ok) { closeEditModal(); loadInventory(); }
-    else { alert("Update failed. Ensure you are Admin."); }
+    if (res.ok) { 
+        // --- NEW: LOG IT FOR THE DEMO ---
+        const currentLogs = JSON.parse(localStorage.getItem("liveLogs") || "[]");
+        currentLogs.unshift({
+            time: new Date().toLocaleString('en-US', { month: 'short', day: 'numeric', year: 'numeric', hour: '2-digit', minute: '2-digit', second: '2-digit' }), 
+            type: "INVENTORY", 
+            desc: `Admin modified details/stock for part ID #${id}`, 
+            status: "SUCCESS", 
+            color: "text-blue-600"
+        });
+        localStorage.setItem("liveLogs", JSON.stringify(currentLogs));
+        // --------------------------------
+
+        closeEditModal(); 
+        loadInventory(); 
+    } else { 
+        alert("Update failed. Ensure you are Admin."); 
+    }
 }
 
 async function deletePart(id) {
-    if(!confirm("Are you sure?")) return;
+    if(!confirm("Are you sure you want to delete this part?")) return;
     const token = localStorage.getItem("token");
     const res = await fetch(`${API_URL}/${id}`, {
         method: "DELETE",
         headers: { "Authorization": "Bearer " + token }
     });
-    if(res.ok) loadInventory();
+    
+    if(res.ok) {
+        // --- NEW: LOG IT FOR THE DEMO ---
+        const currentLogs = JSON.parse(localStorage.getItem("liveLogs") || "[]");
+        currentLogs.unshift({
+            time: new Date().toLocaleString('en-US', { month: 'short', day: 'numeric', year: 'numeric', hour: '2-digit', minute: '2-digit', second: '2-digit' }), 
+            type: "INVENTORY", 
+            desc: `Admin deleted part ID #${id} from the system`, 
+            status: "WARNING", 
+            color: "text-red-500"
+        });
+        localStorage.setItem("liveLogs", JSON.stringify(currentLogs));
+        // --------------------------------
+        
+        loadInventory();
+    }
 }
 
 function toggleModal() { document.getElementById("partModal").classList.toggle("hidden"); }
@@ -126,7 +179,7 @@ function closeEditModal() { document.getElementById("editModal").classList.add("
 window.openEditModal = function(part) {
     document.getElementById("edit_id").value = part.id;
     document.getElementById("edit_name").value = part.name;
-    document.getElementById("edit_category").value = part.category || "Universal"; // NEW CATEGORY BINDING
+    document.getElementById("edit_category").value = part.category || "Universal";
     document.getElementById("edit_sku").value = part.sku;
     document.getElementById("edit_price").value = part.price;
     document.getElementById("edit_quantity").value = part.quantity;

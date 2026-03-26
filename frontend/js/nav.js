@@ -65,7 +65,24 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 });
 
+// Find your logout function and update it to this:
 function logout() {
-    localStorage.clear();
+    // 1. Rescue the live logs before wiping!
+    const savedLogs = localStorage.getItem("liveLogs");
+    
+    // 2. Clear out the sensitive security tokens safely
+    localStorage.removeItem("token");
+    localStorage.removeItem("role");
+    localStorage.removeItem("username");
+    
+    // 3. Put the rescued logs right back!
+    if (savedLogs) {
+        localStorage.setItem("liveLogs", savedLogs);
+    }
+    
+    // 4. Send them back to the login screen
     window.location.href = "login.html";
 }
+
+// If your logout is attached to the window, make sure this line is there:
+window.logout = logout;

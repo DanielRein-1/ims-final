@@ -22,7 +22,8 @@ async function loadSuppliers() {
     const role = localStorage.getItem("role");
 
     try {
-        const res = await fetch(API_URL + "/", { headers: { "Authorization": "Bearer " + token }});
+        // CHANGED: We now call our new balances route!
+        const res = await fetch(API_URL + "/balances", { headers: { "Authorization": "Bearer " + token }});
         if (res.ok) {
             const suppliers = await res.json();
             const tbody = document.getElementById("suppliersTableBody");
@@ -44,8 +45,10 @@ async function loadSuppliers() {
                     `;
                 }
 
-                // Direct Gmail Link
                 const emailLink = `<a href="https://mail.google.com/mail/?view=cm&fs=1&to=${s.email}" target="_blank" class="text-blue-600 hover:underline font-bold">${s.email}</a>`;
+                
+                // Formatting the balance color (Red if we owe money, green/gray if 0)
+                const balanceColor = s.balance > 0 ? "text-red-600" : "text-green-600";
 
                 return `
                 <tr class="border-b hover:bg-slate-50 transition">
@@ -53,6 +56,9 @@ async function loadSuppliers() {
                     <td class="p-4 text-slate-600">${s.contact_person || '-'}</td>
                     <td class="p-4">${emailLink}</td>
                     <td class="p-4 text-slate-600 font-mono text-xs">${s.phone}</td>
+                    
+                    <td class="p-4 font-mono font-bold ${balanceColor}">KES ${s.balance.toLocaleString()}</td>
+                    
                     <td class="p-4">${actions}</td>
                 </tr>`;
             }).join('');

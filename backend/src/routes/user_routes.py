@@ -8,6 +8,9 @@ from src.schemas.user_schema import UserCreate, UserResponse
 from src.utils.security import get_password_hash
 from src.auth.role_guard import get_current_user_role
 
+class PasswordResetRequest(BaseModel):
+    new_password: str
+
 router = APIRouter(prefix="/api/users", tags=["Users"])
 
 @router.get("/", response_model=List[UserResponse])
@@ -32,23 +35,22 @@ def create_user(user: UserCreate, db: Session = Depends(get_db), role: str = Dep
     db.refresh(new_user)
     return new_user
 
-# --- FIXED: Matches the Frontend Button ---
-@router.post("/{user_id}/reset")
-def reset_password(user_id: int, db: Session = Depends(get_db), role: str = Depends(get_current_user_role)):
+# 2. Replace your existing reset route with this dynamic one
+@router.put("/{user_id}/reset-password")
+def reset_password(user_id: int, req: PasswordResetRequest, db: Session = Depends(get_db), role: str = Depends(get_current_user_role)):
     if role != "ADMIN":
-        raise HTTPException(status_code=403, detail="Not authorized")
-    
+        raise HTTPException(status_code=403, detail="Only Admins can reset passwords")
+        
     user = db.query(User).filter(User.id == user_id).first()
     if not user:
         raise HTTPException(status_code=404, detail="User not found")
-        
-    # Reset to default password '123456'
-    default_password = "123456"
-    user.password_hash = get_password_hash(default_password)
+
+    # Hash the CUSTOM password sent from the frontend
+   # Hash the CUSTOM password using your existing helper function
+    user.password_hash = get_password_hash(req.new_password) # type: ignore
     db.commit()
     
-    return {"message": f"Password reset to '{default_password}'"}
-# ------------------------------------------
+    return {"message": "Password updated successfully"}
 
 @router.delete("/{user_id}")
 def delete_user(user_id: int, db: Session = Depends(get_db), role: str = Depends(get_current_user_role)):

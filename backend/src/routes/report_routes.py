@@ -1,4 +1,3 @@
-# overwrite backend/src/routes/report_routes.py
 from fastapi import APIRouter, Depends, HTTPException
 from fastapi.responses import StreamingResponse
 from sqlalchemy.orm import Session, joinedload
@@ -9,23 +8,41 @@ from src.auth.role_guard import get_current_user_role
 from reportlab.lib.pagesizes import letter
 from reportlab.pdfgen import canvas
 import io
-from datetime import datetime
+from datetime import datetime, timedelta, timezone
 
 router = APIRouter(prefix="/api/reports", tags=["Reports"])
 
 @router.get("/sales")
-def generate_sales_report(db: Session = Depends(get_db), role: str = Depends(get_current_user_role)):
+def generate_sales_report(timeframe: str = "all", db: Session = Depends(get_db), role: str = Depends(get_current_user_role)):
     if role != "ADMIN":
         raise HTTPException(status_code=403, detail="Not authorized")
 
-    orders = db.query(Order).options(joinedload(Order.part)).all()
-    total_revenue = db.query(func.sum(Order.total_price)).scalar() or 0
+    # 1. Base Query with Joined Data
+    query = db.query(Order).options(joinedload(Order.part))
+    
+    # 2. Apply Timeframe Filters & Set Dynamic Title
+    now = datetime.now(timezone.utc)
+    report_title = "IMS - All-Time Sales Report"
+    
+    if timeframe == "month":
+        query = query.filter(Order.created_at >= now - timedelta(days=30))
+        report_title = "IMS - 30-Day Sales Report"
+    elif timeframe == "year":
+        query = query.filter(Order.created_at >= now - timedelta(days=365))
+        report_title = "IMS - Annual Sales Report"
 
+    # 3. Execute Query (Sorted newest to oldest)
+    orders = query.order_by(Order.created_at.desc()).all()
+    
+    # Calculate revenue purely based on the filtered rows to ensure 100% accuracy
+    total_revenue = sum(order.total_price for order in orders)
+
+    # 4. Generate PDF
     buffer = io.BytesIO()
     c = canvas.Canvas(buffer, pagesize=letter)
     
     c.setFont("Helvetica-Bold", 20)
-    c.drawString(30, 750, "IMS - Monthly Sales Report")
+    c.drawString(30, 750, report_title)
     
     c.setFont("Helvetica", 12)
     c.drawString(30, 730, f"Generated On: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
@@ -36,8 +53,8 @@ def generate_sales_report(db: Session = Depends(get_db), role: str = Depends(get
     y = 670
     c.setFont("Helvetica-Bold", 10)
     c.drawString(30, y, "ID")
-    c.drawString(80, y, "Part Name (Make)")  # Updated Header
-    c.drawString(320, y, "Qty")              # Shifted slightly right to make room
+    c.drawString(80, y, "Part Name (Make)") 
+    c.drawString(320, y, "Qty")              
     c.drawString(380, y, "Total (KES)")
     c.drawString(480, y, "Date")
     
@@ -48,16 +65,15 @@ def generate_sales_report(db: Session = Depends(get_db), role: str = Depends(get
         if y < 50:
             c.showPage()
             y = 750
+            c.setFont("Helvetica", 10) # FIX: Reset font on new pages
         
-        # --- ESSENTIAL ADDITION: Prepend the Category (Make) to the name ---
         if order.part:
             part_name = f"[{order.part.category}] {order.part.name}"
         else:
             part_name = f"Part #{order.part_id}"
-        # -------------------------------------------------------------------
             
         c.drawString(30, y, str(order.id))
-        c.drawString(80, y, part_name[:40]) # Allowed slightly more characters
+        c.drawString(80, y, part_name[:40]) 
         c.drawString(320, y, str(order.quantity))
         c.drawString(380, y, f"{order.total_price:,.2f}")
         c.drawString(480, y, order.created_at.strftime("%Y-%m-%d"))
@@ -70,4 +86,8 @@ def generate_sales_report(db: Session = Depends(get_db), role: str = Depends(get
     c.save()
     buffer.seek(0)
     
-    return StreamingResponse(buffer, media_type="application/pdf", headers={"Content-Disposition": "attachment; filename=sales_report.pdf"})
+    return StreamingResponse(
+        buffer, 
+        media_type="application/pdf", 
+        headers={"Content-Disposition": f"attachment; filename=sales_report_{timeframe}.pdf"}
+    )

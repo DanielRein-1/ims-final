@@ -1,6 +1,16 @@
 /* MAIN APP STYLES (THE INSIDE WORLD)
    Target: dashboard.html, inventory.html, etc. */
 
+/* Import the highly legible 'Inter' font from Google */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+
+/* Force the entire dashboard to use it */
+body {
+    font-family: 'Inter', sans-serif !important;
+    /* Optional: This makes fonts render slightly thicker and smoother on Mac/Linux */
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
 :root {
     /* MASTER THEME PALETTE */
     

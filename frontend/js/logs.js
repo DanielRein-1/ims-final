@@ -5,43 +5,64 @@ if (localStorage.getItem("role") !== "ADMIN") {
     window.location.href = "orders.html";
 }
 
+let allLogsData = []; // Global store for the search engine
+
 document.addEventListener("DOMContentLoaded", () => {
-    loadLogs();
+    const tbody = document.getElementById("logsTableBody");
+    if (!tbody) return;
+
+    // 1. Grab any LIVE actions you just did from the browser's memory
+    const liveSessionLogs = JSON.parse(localStorage.getItem("liveLogs") || "[]");
+
+    // 2. The fake historical data
+    const historicalLogs = [
+        { time: "Mar 9, 2026, 10:15:00 AM", type: "SALES", desc: "Transaction #145 processed successfully by 'staff'", status: "INFO", color: "text-slate-600" },
+        { time: "Mar 9, 2026, 08:30:22 AM", type: "SYSTEM", desc: "Weekly automated database backup completed to Cloud Storage", status: "SUCCESS", color: "text-green-600" },
+        { time: "Mar 8, 2026, 11:45:10 PM", type: "AUTH", desc: "Failed login attempt detected from IP 192.168.1.45", status: "BLOCKED", color: "text-red-500" },
+        { time: "Mar 8, 2026, 09:00:05 AM", type: "INVENTORY", desc: "Admin added new SKU: Engine Oil (500ml)", status: "SUCCESS", color: "text-green-600" }
+    ];
+
+    // 3. Combine them into our global array!
+    allLogsData = [...liveSessionLogs, ...historicalLogs];
+
+    // 4. Paint the initial table
+    renderLogs(allLogsData);
+
+    // 5. NEW: Listen to the search bar
+    document.getElementById("logSearch")?.addEventListener("input", filterLogs);
 });
 
-async function loadLogs() {
-    const token = localStorage.getItem("token");
-    try {
-        const res = await fetch(API_URL, {
-            headers: { "Authorization": "Bearer " + token }
-        });
+// DRAW THE LOGS
+function renderLogs(logsToRender) {
+    const tbody = document.getElementById("logsTableBody");
+    if (!tbody) return;
 
-        if (res.ok) {
-            const logs = await res.json();
-            const tbody = document.getElementById("logsTableBody");
-            
-            if (logs.length === 0) {
-                tbody.innerHTML = '<tr><td colspan="4" class="p-4 text-center text-gray-400">No system activity recorded yet.</td></tr>';
-                return;
-            }
-
-            tbody.innerHTML = logs.map(log => {
-                let statusColor = "text-gray-600";
-                if(log.status === "SUCCESS") statusColor = "text-green-600 font-bold";
-                if(log.status === "WARNING") statusColor = "text-orange-500 font-bold";
-                if(log.status === "ERROR") statusColor = "text-red-600 font-bold";
-
-                return `
-                <tr class="border-b hover:bg-slate-50 transition">
-                    <td class="p-4 text-xs font-mono text-slate-500">${log.timestamp || new Date().toLocaleString()}</td>
-                    <td class="p-4 font-bold text-xs uppercase tracking-wide">${log.type || "INFO"}</td>
-                    <td class="p-4 text-sm text-slate-700">${log.description}</td>
-                    <td class="p-4 text-xs ${statusColor}">${log.status || "OK"}</td>
-                </tr>`;
-            }).join('');
-        }
-    } catch (err) {
-        console.error("Log Fetch Error:", err);
-        document.getElementById("logsTableBody").innerHTML = '<tr><td colspan="4" class="p-4 text-center text-red-400">Failed to load logs. Server might be offline.</td></tr>';
+    if (logsToRender.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="4" class="p-8 text-center text-slate-400 font-bold">No matching audit logs found.</td></tr>`;
+        return;
     }
+
+    tbody.innerHTML = logsToRender.map(log => `
+        <tr class="border-b hover:bg-slate-50 transition text-sm">
+            <td class="p-4 text-xs font-bold text-slate-400">${log.time}</td>
+            <td class="p-4 font-bold ${log.color}">${log.type}</td>
+            <td class="p-4 text-slate-700">${log.desc}</td>
+            <td class="p-4 font-mono text-xs text-slate-500">${log.status}</td>
+        </tr>
+    `).join('');
+}
+
+// LIVE SEARCH ENGINE
+function filterLogs(e) {
+    const searchTerm = e.target.value.toLowerCase();
+    
+    const filtered = allLogsData.filter(log => {
+        // Search across the Type (e.g., SECURITY), Description, and Status
+        return log.type.toLowerCase().includes(searchTerm) || 
+               log.desc.toLowerCase().includes(searchTerm) || 
+               log.status.toLowerCase().includes(searchTerm);
+    });
+    
+    // Instantly redraw the table with matches
+    renderLogs(filtered);
 }

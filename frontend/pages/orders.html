@@ -12,17 +12,25 @@
     <script src="../js/nav.js"></script>
 
     <div class="ml-64">
-        <div class="bg-master text-white p-8 shadow-md flex justify-between items-center">
+       <div class="bg-master text-white p-8 shadow-md flex justify-between items-center">
             <div>
                 <h2 class="text-3xl font-extrabold tracking-tight">Sales Transactions</h2>
                 <p class="text-slate-400 text-sm mt-1">Outbound stock history</p>
             </div>
-            <button onclick="toggleModal()" class="btn-action">
-                <img src="../assets/icons/shopping-cart.svg" class="w-5 h-5 mr-2 filter invert">
-                New Sale
-            </button>
+            
+            <div class="flex gap-4 items-center">
+                <div class="relative hidden sm:block">
+                    <input type="text" id="orderSearch" placeholder="Search ID, Make, or Part..." 
+                           class="pl-10 pr-4 py-2 rounded-lg text-slate-700 font-medium text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 w-64 shadow-inner">
+                    <svg class="w-5 h-5 text-slate-400 absolute left-3 top-2.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
+                </div>
+                
+                <button onclick="toggleModal()" class="btn-action whitespace-nowrap">
+                    <img src="../assets/icons/shopping-cart.svg" class="w-5 h-5 mr-2 filter invert">
+                    New Sale
+                </button>
+            </div>
         </div>
-
         <div class="p-8">
             <div class="bg-white rounded-lg shadow-lg overflow-hidden border border-slate-200">
                 <table class="w-full text-left border-collapse">

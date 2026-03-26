@@ -12,13 +12,18 @@ class POService:
         if not part:
             raise HTTPException(status_code=404, detail="Part not found")
 
-        total_cost = part.price * po_data.quantity
+        # Enterprise Financial Tracking
+        unit_cp = part.buying_price 
+        total_po_cost = unit_cp * po_data.quantity
+        paid = getattr(po_data, 'amount_paid', 0.0)
 
         new_po = PurchaseOrder(
             supplier_id=po_data.supplier_id,
             part_id=po_data.part_id,
             quantity=po_data.quantity,
-            total_cost=total_cost,
+            unit_cost=unit_cp,          
+            total_cost=total_po_cost,   
+            amount_paid=paid,           
             status="Pending"
         )
         db.add(new_po)
@@ -28,24 +33,26 @@ class POService:
 
     @staticmethod
     def receive_po(db: Session, po_id: int, actual_qty: int):
-        # 1. Find PO
         po = db.query(PurchaseOrder).filter(PurchaseOrder.id == po_id).first()
         if not po:
             raise HTTPException(status_code=404, detail="PO not found")
         
-        if po.status == "Received":
+        # Cast to string to satisfy strict type checking
+        if str(po.status) == "Received":
             raise HTTPException(status_code=400, detail="PO already received")
 
-        # 2. Find Part
         part = db.query(Part).filter(Part.id == po.part_id).first()
         
-        # 3. Update Stock using ACTUAL quantity
-        part.quantity += actual_qty
+        # FIXED: Ensure the part actually exists before updating quantity
+        if not part:
+            raise HTTPException(status_code=404, detail="Part not found in database")
         
-        # 4. Update PO Details
-        po.received_quantity = actual_qty
-        po.received_at = datetime.utcnow()
-        po.status = "Received"
+        # Update stock and mark PO as received
+        # Adding # type: ignore tells Pyright that SQLAlchemy handles this assignment safely
+        part.quantity = int(part.quantity) + actual_qty  # type: ignore
+        po.received_quantity = actual_qty  # type: ignore
+        po.received_at = datetime.utcnow()  # type: ignore
+        po.status = "Received"  # type: ignore
 
         db.commit()
         db.refresh(po)
@@ -53,4 +60,4 @@ class POService:
 
     @staticmethod
     def get_all_pos(db: Session):
-        return db.query(PurchaseOrder).all()
+        return db.query(PurchaseOrder).order_by(PurchaseOrder.created_at.desc()).all()

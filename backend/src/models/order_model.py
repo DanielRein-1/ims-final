@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Integer, String, ForeignKey, DateTime
+from sqlalchemy import Column, Integer, String, ForeignKey, DateTime, Float
 from sqlalchemy.orm import relationship
 from datetime import datetime
 from src.models.db import Base
@@ -10,10 +10,14 @@ class Order(Base):
     part_id = Column(Integer, ForeignKey("parts.id"), nullable=False)
     user_id = Column(Integer, ForeignKey("users.id"), nullable=False)
     quantity = Column(Integer, nullable=False)
-    total_price = Column(Integer, nullable=False) # Storing in cents/shillings
+    
+    # Capture prices at moment of sale for Profit/Loss tracking
+    unit_buying_price = Column(Float, nullable=False) 
+    unit_selling_price = Column(Float, nullable=False)
+    total_price = Column(Float, nullable=False) 
+    
     status = Column(String, default="Completed")
     created_at = Column(DateTime, default=datetime.utcnow)
 
-    # Relationships (Allows us to get the Part name easily)
     part = relationship("Part")
     user = relationship("User")
